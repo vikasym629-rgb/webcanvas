@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebCanvas — We Build Websites That Work</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f2ee;
+    --cream: #ede8e0;
+    --accent: #c8f04d;
+    --accent2: #4d8ff0;
+    --gray: #888;
+    --card-bg: #141414;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4rem;
+    backdrop-filter: blur(12px);
+    background: rgba(10,10,10,0.7);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+
+  .logo span { color: var(--accent); }
+
+  nav ul {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  nav a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--accent);
+    color: var(--black) !important;
+    padding: 0.6rem 1.4rem;
+    border-radius: 100px;
+    font-weight: 500;
+    transition: transform 0.2s, opacity 0.2s !important;
+  }
+
+  .nav-cta:hover { transform: scale(1.05); opacity: 0.9; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-circle {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,240,77,0.12) 0%, transparent 70%);
+    top: 50%;
+    right: -100px;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(200,240,77,0.1);
+    border: 1px solid rgba(200,240,77,0.3);
+    color: var(--accent);
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    width: fit-content;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -2px;
+    max-width: 800px;
+    animation: fadeUp 0.7s ease 0.1s both;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    color: var(--gray);
+    max-width: 480px;
+    line-height: 1.7;
+    font-weight: 300;
+    animation: fadeUp 0.7s ease 0.2s both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    animation: fadeUp 0.7s ease 0.3s both;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--black);
+    padding: 1rem 2rem;
+    border-radius: 100px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 30px rgba(200,240,77,0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 50px rgba(200,240,77,0.5);
+  }
+
+  .btn-secondary {
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--white);
+    padding: 1rem 2rem;
+    border-radius: 100px;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    animation: fadeUp 0.7s ease 0.4s both;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .stat-num span { color: var(--accent); }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.2rem;
+  }
+
+  /* SERVICES */
+  .section {
+    padding: 6rem 4rem;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    max-width: 600px;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    margin-top: 4rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .service-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .service-card:hover { background: #1a1a1a; }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-icon {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .service-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+
+  .service-desc {
+    color: var(--gray);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .service-price {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* PORTFOLIO */
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .portfolio-card {
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+
+  .portfolio-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .portfolio-img {
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .portfolio-img.rest { background: linear-gradient(135deg, #1a0a00, #3d1a00); }
+  .portfolio-img.salon { background: linear-gradient(135deg, #0a0a1a, #1a0a3d); }
+  .portfolio-img.clinic { background: linear-gradient(135deg, #001a0a, #003d1a); }
+  .portfolio-img.gym { background: linear-gradient(135deg, #1a0000, #3d0000); }
+
+  .portfolio-info {
+    padding: 1.5rem;
+  }
+
+  .portfolio-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .portfolio-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .portfolio-desc {
+    color: var(--gray);
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+  }
+
+  /* PROCESS */
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin-top: 4rem;
+    position: relative;
+  }
+
+  .step {
+    padding: 2rem;
+    position: relative;
+  }
+
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: rgba(200,240,77,0.15);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .step-title {
+    font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .step-desc {
+    color: var(--gray);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  /* PRICING */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .pricing-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 2.5rem;
+    transition: transform 0.3s;
+  }
+
+  .pricing-card.featured {
+    background: var(--accent);
+    color: var(--black);
+    border-color: var(--accent);
+    transform: scale(1.03);
+  }
+
+  .pricing-card:hover { transform: translateY(-4px); }
+  .pricing-card.featured:hover { transform: scale(1.03) translateY(-4px); }
+
+  .pricing-name {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gray);
+    margin-bottom: 1rem;
+  }
+
+  .pricing-card.featured .pricing-name { color: rgba(0,0,0,0.6); }
+
+  .pricing-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .pricing-amount sup {
+    font-size: 1.2rem;
+    vertical-align: super;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+  }
+
+  .pricing-desc {
+    color: var(--gray);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+  }
+
+  .pricing-card.featured .pricing-desc { color: rgba(0,0,0,0.6); }
+
+  .pricing-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 1.5rem 0;
+  }
+
+  .pricing-card.featured .pricing-divider { background: rgba(0,0,0,0.15); }
+
+  .pricing-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .pricing-features li {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--gray);
+  }
+
+  .pricing-card.featured .pricing-features li { color: rgba(0,0,0,0.75); }
+
+  .pricing-features li::before {
+    content: '✓';
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.8rem;
+  }
+
+  .pricing-card.featured .pricing-features li::before { color: var(--black); }
+
+  .pricing-btn {
+    display: block;
+    text-align: center;
+    margin-top: 2rem;
+    padding: 0.9rem;
+    border-radius: 100px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--white);
+    transition: all 0.2s;
+  }
+
+  .pricing-card.featured .pricing-btn {
+    background: var(--black);
+    color: var(--accent);
+    border-color: transparent;
+  }
+
+  .pricing-btn:hover { background: rgba(255,255,255,0.1); }
+  .pricing-card.featured .pricing-btn:hover { opacity: 0.9; }
+
+  /* TESTIMONIALS */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .testimonial-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .stars { color: var(--accent); font-size: 0.9rem; margin-bottom: 1rem; }
+
+  .testimonial-text {
+    color: #ccc;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .author-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    background: rgba(200,240,77,0.1);
+  }
+
+  .author-name { font-size: 0.9rem; font-weight: 500; }
+  .author-biz { font-size: 0.75rem; color: var(--gray); }
+
+  /* CTA */
+  .cta-section {
+    margin: 0 4rem 6rem;
+    background: var(--accent);
+    border-radius: 24px;
+    padding: 5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    color: var(--black);
+    letter-spacing: -1px;
+    line-height: 1.1;
+    max-width: 500px;
+  }
+
+  .cta-actions { display: flex; flex-direction: column; gap: 1rem; align-items: flex-end; }
+
+  .cta-btn {
+    background: var(--black);
+    color: var(--accent);
+    padding: 1rem 2.5rem;
+    border-radius: 100px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: transform 0.2s;
+  }
+
+  .cta-btn:hover { transform: scale(1.05); }
+
+  .cta-note {
+    font-size: 0.8rem;
+    color: rgba(0,0,0,0.5);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--gray);
+    font-size: 0.85rem;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--white);
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    nav ul { display: none; }
+    .hero { padding: 6rem 1.5rem 3rem; }
+    .section { padding: 4rem 1.5rem; }
+    .services-grid, .portfolio-grid, .pricing-grid, .testimonials-grid, .process-steps { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+    .cta-section { margin: 0 1.5rem 4rem; padding: 3rem 2rem; flex-direction: column; }
+    .cta-actions { align-items: flex-start; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Web<span>Canvas</span></div>
+  <ul>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact" class="nav-cta">Get a Free Quote</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-circle"></div>
+  <div class="hero-tag">✦ Available for new projects</div>
+  <h1>We paint your <em>business</em> on the web.</h1>
+  <p class="hero-sub">WebCanvas builds fast, beautiful websites for Indian businesses — restaurants, salons, clinics, and more. Starting at just ₹8,000.</p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary">Get a Free Mockup →</a>
+    <a href="#work" class="btn-secondary">See Our Work</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">20<span>+</span></div>
+      <div class="stat-label">Websites Delivered</div>
+    </div>
+    <div>
+      <div class="stat-num">2<span>days</span></div>
+      <div class="stat-label">Average Turnaround</div>
+    </div>
+    <div>
+      <div class="stat-num">100<span>%</span></div>
+      <div class="stat-label">Client Satisfaction</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="section-label">What We Do</div>
+  <h2 class="section-title">Everything your business needs online.</h2>
+  <div class="services-grid fade-up">
+    <div class="service-card">
+      <div class="service-icon">🖥️</div>
+      <div class="service-title">Business Websites</div>
+      <p class="service-desc">Clean, professional websites that make your business look credible and attract new customers 24/7.</p>
+      <div class="service-price">Starting ₹8,000</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛒</div>
+      <div class="service-title">Online Stores</div>
+      <p class="service-desc">Sell your products online with a full e-commerce setup — payments, inventory, and order management included.</p>
+      <div class="service-price">Starting ₹20,000</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📱</div>
+      <div class="service-title">Mobile-First Design</div>
+      <p class="service-desc">Every site we build looks stunning on phones, tablets, and desktops. Because your customers browse on mobile.</p>
+      <div class="service-price">Included in all plans</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔍</div>
+      <div class="service-title">SEO Setup</div>
+      <p class="service-desc">Get found on Google by customers searching for your services. We handle technical SEO and local listings.</p>
+      <div class="service-price">Starting ₹5,000</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚡</div>
+      <div class="service-title">Speed Optimization</div>
+      <p class="service-desc">Slow websites lose customers. We ensure your site loads in under 2 seconds for the best user experience.</p>
+      <div class="service-price">Starting ₹3,000</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛠️</div>
+      <div class="service-title">Monthly Maintenance</div>
+      <p class="service-desc">We keep your website updated, secure, and running smoothly every month. You focus on your business.</p>
+      <div class="service-price">₹2,000/month</div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="section" id="work">
+  <div class="section-label">Our Work</div>
+  <h2 class="section-title">Projects that made businesses grow.</h2>
+  <div class="portfolio-grid fade-up">
+    <div class="portfolio-card">
+      <div class="portfolio-img rest">🍽️</div>
+      <div class="portfolio-info">
+        <div class="portfolio-tag">Restaurant</div>
+        <div class="portfolio-name">Spice Garden — Pune</div>
+        <div class="portfolio-desc">Full website with online menu, table booking & Google Maps integration</div>
+      </div>
+    </div>
+    <div class="portfolio-card">
+      <div class="portfolio-img salon">💇</div>
+      <div class="portfolio-info">
+        <div class="portfolio-tag">Salon</div>
+        <div class="portfolio-name">Glam Studio — Mumbai</div>
+        <div class="portfolio-desc">Service showcase with appointment booking form and WhatsApp integration</div>
+      </div>
+    </div>
+    <div class="portfolio-card">
+      <div class="portfolio-img clinic">🏥</div>
+      <div class="portfolio-info">
+        <div class="portfolio-tag">Healthcare</div>
+        <div class="portfolio-name">HealthFirst Clinic — Delhi</div>
+        <div class="portfolio-desc">Doctor profiles, appointment system, and patient trust-building design</div>
+      </div>
+    </div>
+    <div class="portfolio-card">
+      <div class="portfolio-img gym">💪</div>
+      <div class="portfolio-info">
+        <div class="portfolio-tag">Fitness</div>
+        <div class="portfolio-name">IronWill Gym — Bangalore</div>
+        <div class="portfolio-desc">Membership plans, class schedule, trainer profiles and Instagram feed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">From idea to live in 72 hours.</h2>
+  <div class="process-steps fade-up">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-title">Free Consultation</div>
+      <p class="step-desc">Tell us about your business. We understand your goals, audience, and style preferences.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-title">Free Mockup</div>
+      <p class="step-desc">We design a sample homepage for your business — no payment, no commitment required.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-title">Build & Review</div>
+      <p class="step-desc">Once approved, we build the full site and share it for your feedback. Revisions included.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-title">Go Live!</div>
+      <p class="step-desc">We launch your site, set up your domain, and hand over everything. You're open for business online.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 class="section-title">Transparent pricing. No surprises.</h2>
+  <div class="pricing-grid fade-up">
+    <div class="pricing-card">
+      <div class="pricing-name">Starter</div>
+      <div class="pricing-amount"><sup>₹</sup>8,000</div>
+      <div class="pricing-desc">Perfect for getting online fast</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>3-page website</li>
+        <li>Mobile responsive</li>
+        <li>Contact form</li>
+        <li>WhatsApp button</li>
+        <li>Google Maps embed</li>
+        <li>Delivered in 2 days</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Get Started</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-name">Professional</div>
+      <div class="pricing-amount"><sup>₹</sup>15,000</div>
+      <div class="pricing-desc">Most popular for growing businesses</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>5-page website</li>
+        <li>Mobile responsive</li>
+        <li>SEO optimization</li>
+        <li>Photo gallery</li>
+        <li>Booking / enquiry form</li>
+        <li>Social media links</li>
+        <li>Delivered in 3 days</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Get Started</a>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-name">Premium</div>
+      <div class="pricing-amount"><sup>₹</sup>25,000</div>
+      <div class="pricing-desc">For businesses that want to dominate</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>8+ pages</li>
+        <li>Advanced SEO</li>
+        <li>Blog / news section</li>
+        <li>Online booking system</li>
+        <li>Speed optimization</li>
+        <li>1 month free support</li>
+        <li>Delivered in 5 days</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Get Started</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="section-label">What Clients Say</div>
+  <h2 class="section-title">Real results for real businesses.</h2>
+  <div class="testimonials-grid fade-up">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"We started getting online enquiries within a week of launching. WebCanvas delivered exactly what we needed — fast and affordable."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">🍽️</div>
+        <div>
+          <div class="author-name">Rahul Sharma</div>
+          <div class="author-biz">Spice Garden, Pune</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"Our salon bookings increased by 40% after the website went live. The design is beautiful and our customers love it!"</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">💇</div>
+        <div>
+          <div class="author-name">Priya Mehta</div>
+          <div class="author-biz">Glam Studio, Mumbai</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"Very professional team. They understood our requirements perfectly and delivered in just 2 days. Highly recommend!"</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">🏥</div>
+        <div>
+          <div class="author-name">Dr. Ankit Verma</div>
+          <div class="author-biz">HealthFirst Clinic, Delhi</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section fade-up" id="contact">
+  <div class="cta-title">Ready to take your business online?</div>
+  <div class="cta-actions">
+    <a href="https://wa.me/919999999999?text=Hi%2C%20I%20want%20a%20website%20for%20my%20business" class="cta-btn" target="_blank">💬 Chat on WhatsApp</a>
+    <div class="cta-note">Free mockup · No commitment · Reply in 2 hours</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Web<span>Canvas</span></div>
+  <div>© 2026 WebCanvas. All rights reserved.</div>
+  <div>Made with ❤️ in India</div>
+</footer>
+
+<script>
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

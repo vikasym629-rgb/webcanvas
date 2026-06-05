@@ -3,955 +3,635 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WebCanvas — Digital Experiences for Indian Businesses</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- SEO META TAGS -->
+<title>WebCanvas — Professional Website Design Agency in Bengaluru, India</title>
+<meta name="description" content="WebCanvas builds stunning, fast websites for Indian businesses — restaurants, clinics, salons, gyms and more. Free mockup in 24 hours. Based in Bengaluru.">
+<meta name="keywords" content="web design Bengaluru, website developer Bangalore, affordable website design India, clinic website Bangalore, restaurant website Bangalore, web designer Koramangala">
+<meta name="author" content="WebCanvas">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a0010">
+
+<!-- OPEN GRAPH (WhatsApp & Social Preview) -->
+<meta property="og:title" content="WebCanvas — Professional Websites for Indian Businesses">
+<meta property="og:description" content="We build stunning websites for restaurants, clinics, salons & more. Free mockup in 24 hours!">
+<meta property="og:url" content="https://webcanvas-in.netlify.app">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://webcanvas-in.netlify.app/preview.png">
+
+<!-- TWITTER CARD -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WebCanvas — Professional Websites for Indian Businesses">
+<meta name="twitter:description" content="We build stunning websites for restaurants, clinics, salons & more. Free mockup in 24 hours!">
+
+<!-- CANONICAL -->
+<link rel="canonical" href="https://webcanvas-in.netlify.app">
+
+<!-- SCHEMA MARKUP -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "WebCanvas",
+  "description": "Professional website design agency in Bengaluru, India",
+  "url": "https://webcanvas-in.netlify.app",
+  "telephone": "+918088369453",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Bengaluru",
+    "addressRegion": "Karnataka",
+    "addressCountry": "IN"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 12.9716,
+    "longitude": 77.5946
+  },
+  "openingHours": "Mo-Su 09:00-21:00",
+  "priceRange": "₹₹",
+  "sameAs": [
+    "https://www.instagram.com/webcanvas.in"
+  ]
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --bg: #060608;
-    --surface: #0e0e12;
-    --surface2: #16161c;
-    --border: rgba(255,255,255,0.07);
-    --white: #f0eeeb;
-    --muted: #6b6b78;
-    --accent: #7fff6e;
-    --accent2: #6e8fff;
-    --accent3: #ff6e9c;
-  }
-
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--white);
-    font-family: 'DM Sans', sans-serif;
-    overflow-x: hidden;
-    cursor: none;
-  }
-
-  /* CUSTOM CURSOR */
-  .cursor {
-    position: fixed;
-    width: 10px; height: 10px;
-    background: var(--accent);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
-    mix-blend-mode: difference;
-  }
-  .cursor-follower {
-    position: fixed;
-    width: 36px; height: 36px;
-    border: 1px solid rgba(127,255,110,0.4);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: left 0.12s ease, top 0.12s ease, width 0.3s, height 0.3s;
-  }
-
-  /* NOISE */
-  body::after {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9997;
-  }
-
-  /* MARQUEE */
-  .marquee-wrap {
-    overflow: hidden;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    padding: 0.9rem 0;
-  }
-  .marquee-track {
-    display: flex;
-    gap: 3rem;
-    width: max-content;
-    animation: marquee 18s linear infinite;
-  }
-  .marquee-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.75rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    white-space: nowrap;
-  }
-  .marquee-dot { color: var(--accent); font-size: 1.2rem; }
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 500;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.6rem 3rem;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background: rgba(6,6,8,0.8);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 1.3rem;
-    letter-spacing: -0.5px;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .logo-dot {
-    width: 8px; height: 8px;
-    background: var(--accent);
-    border-radius: 50%;
-    animation: blink 2s ease infinite;
-  }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 2.5rem;
-    list-style: none;
-  }
-  .nav-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-family: 'Syne', sans-serif;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--white); }
-
-  .nav-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--white) !important;
-    padding: 0.55rem 1.3rem;
-    border-radius: 100px;
-    transition: background 0.2s, border-color 0.2s !important;
-  }
-  .nav-btn:hover {
-    background: var(--accent) !important;
-    color: var(--bg) !important;
-    border-color: var(--accent) !important;
-  }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    padding: 10rem 3rem 5rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-grid-lines {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-    background-size: 80px 80px;
-    pointer-events: none;
-  }
-
-  .hero-glow {
-    position: absolute;
-    width: 700px; height: 700px;
-    background: radial-gradient(circle, rgba(127,255,110,0.06) 0%, transparent 65%);
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-
-  .hero-left { position: relative; z-index: 1; }
-
-  .hero-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: slideUp 0.7s ease 0.1s forwards;
-  }
-  .hero-eyebrow::before {
-    content: '';
-    display: inline-block;
-    width: 24px; height: 1px;
-    background: var(--accent);
-  }
-
-  h1 {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(3.5rem, 6vw, 6rem);
-    line-height: 1.05;
-    letter-spacing: -2px;
-    font-weight: 400;
-    opacity: 0;
-    animation: slideUp 0.7s ease 0.2s forwards;
-  }
-
-  h1 em {
-    font-style: italic;
-    color: var(--accent);
-  }
-
-  .hero-body {
-    margin-top: 2rem;
-    color: var(--muted);
-    font-size: 1rem;
-    line-height: 1.8;
-    max-width: 420px;
-    font-weight: 300;
-    opacity: 0;
-    animation: slideUp 0.7s ease 0.3s forwards;
-  }
-
-  .hero-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2.5rem;
-    opacity: 0;
-    animation: slideUp 0.7s ease 0.4s forwards;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.9rem 1.8rem;
-    border-radius: 100px;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.25s;
-    letter-spacing: 0.3px;
-  }
-
-  .btn-fill {
-    background: var(--accent);
-    color: var(--bg);
-    box-shadow: 0 0 40px rgba(127,255,110,0.25);
-  }
-  .btn-fill:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 60px rgba(127,255,110,0.4);
-  }
-
-  .btn-ghost {
-    border: 1px solid var(--border);
-    color: var(--muted);
-  }
-  .btn-ghost:hover {
-    border-color: rgba(255,255,255,0.2);
-    color: var(--white);
-  }
-
-  /* HERO RIGHT — floating card stack */
-  .hero-right {
-    position: relative;
-    height: 500px;
-    opacity: 0;
-    animation: slideUp 0.8s ease 0.5s forwards;
-  }
-
-  .float-card {
-    position: absolute;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 1.8rem;
-    backdrop-filter: blur(10px);
-  }
-
-  .float-card-main {
-    width: 300px;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    animation: float1 6s ease-in-out infinite;
-  }
-
-  .float-card-stat {
-    width: 160px;
-    top: 10%; right: 0;
-    animation: float2 5s ease-in-out 1s infinite;
-    text-align: center;
-  }
-
-  .float-card-badge {
-    width: 180px;
-    bottom: 10%; left: 0;
-    animation: float3 7s ease-in-out 0.5s infinite;
-  }
-
-  @keyframes float1 { 0%,100%{transform:translate(-50%,-50%) translateY(0)} 50%{transform:translate(-50%,-50%) translateY(-12px)} }
-  @keyframes float2 { 0%,100%{transform:translateY(0) rotate(3deg)} 50%{transform:translateY(-8px) rotate(3deg)} }
-  @keyframes float3 { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-10px) rotate(-2deg)} }
-
-  .card-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.8rem;
-  }
-
-  .card-preview {
-    height: 120px;
-    background: var(--surface2);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card-preview::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(127,255,110,0.05), transparent);
-  }
-
-  .card-title { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 600; }
-  .card-sub { font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; }
-
-  .stat-num-big {
-    font-family: 'Instrument Serif', serif;
-    font-size: 2.5rem;
-    color: var(--accent);
-    line-height: 1;
-  }
-  .stat-desc { font-size: 0.75rem; color: var(--muted); margin-top: 0.4rem; font-family: 'Syne', sans-serif; }
-
-  .badge-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
-  .badge-text { font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 600; }
-  .badge-sub { font-size: 0.7rem; color: var(--muted); margin-top: 0.2rem; }
-
-  /* MARQUEE SECTION */
-  .marquee-section { margin: 2rem 0; }
-
-  /* SERVICES */
-  .section {
-    padding: 7rem 3rem;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 4rem;
-    gap: 2rem;
-  }
-
-  .section-eyebrow {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-  }
-
-  h2 {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(2.5rem, 4vw, 4rem);
-    font-weight: 400;
-    line-height: 1.1;
-    letter-spacing: -1.5px;
-  }
-
-  h2 em { font-style: italic; color: var(--accent); }
-
-  .section-note {
-    color: var(--muted);
-    font-size: 0.9rem;
-    max-width: 280px;
-    text-align: right;
-    line-height: 1.7;
-  }
-
-  /* SERVICE LIST */
-  .service-list { display: flex; flex-direction: column; }
-
-  .service-row {
-    display: grid;
-    grid-template-columns: 3rem 1fr 1fr auto;
-    align-items: center;
-    gap: 2rem;
-    padding: 2rem 0;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.2s;
-    cursor: default;
-  }
-
-  .service-row:first-child { border-top: 1px solid var(--border); }
-
-  .service-row:hover .service-row-title { color: var(--accent); }
-
-  .service-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.75rem;
-    color: var(--muted);
-    font-weight: 600;
-  }
-
-  .service-row-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    transition: color 0.2s;
-  }
-
-  .service-row-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
-
-  .service-tag {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 0.35rem 0.9rem;
-    border-radius: 100px;
-    font-size: 0.72rem;
-    font-family: 'Syne', sans-serif;
-    color: var(--muted);
-    white-space: nowrap;
-  }
-
-  /* PORTFOLIO */
-  .portfolio-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 1.5rem;
-  }
-
-  .portfolio-card {
-    border-radius: 20px;
-    overflow: hidden;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s;
-    position: relative;
-    group: true;
-  }
-
-  .portfolio-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-  }
-
-  .portfolio-card.large { grid-row: span 1; }
-
-  .portfolio-thumb {
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3.5rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .portfolio-thumb::before {
-    content: '';
-    position: absolute; inset: 0;
-    opacity: 0.6;
-  }
-
-  .t1 { background: #0d0d1a; }
-  .t1::before { background: radial-gradient(circle at 30% 50%, #1a1040, transparent 70%); }
-  .t2 { background: #0d1a0d; }
-  .t2::before { background: radial-gradient(circle at 70% 30%, #0d3020, transparent 70%); }
-  .t3 { background: #1a0d0d; }
-  .t3::before { background: radial-gradient(circle at 50% 70%, #301020, transparent 70%); }
-  .t4 { background: #1a1a0d; }
-  .t4::before { background: radial-gradient(circle at 40% 40%, #302010, transparent 70%); }
-
-  .portfolio-body { padding: 1.5rem; }
-
-  .portfolio-category {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.5rem;
-  }
-
-  .portfolio-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-  }
-
-  .portfolio-desc { color: var(--muted); font-size: 0.82rem; margin-top: 0.4rem; line-height: 1.6; }
-
-  /* PROCESS */
-  .process-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    overflow: hidden;
-    margin-top: 4rem;
-  }
-
-  .process-step {
-    background: var(--surface);
-    padding: 2.5rem 2rem;
-    transition: background 0.3s;
-    position: relative;
-  }
-
-  .process-step:hover { background: var(--surface2); }
-
-  .step-index {
-    font-family: 'Instrument Serif', serif;
-    font-size: 4rem;
-    color: rgba(127,255,110,0.1);
-    line-height: 1;
-    margin-bottom: 1.5rem;
-  }
-
-  .step-name {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 0.95rem;
-    margin-bottom: 0.6rem;
-  }
-
-  .step-detail { color: var(--muted); font-size: 0.83rem; line-height: 1.7; }
-
-  /* TESTIMONIALS */
-  .testimonials-wrap {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 1.5rem;
-    margin-top: 4rem;
-  }
-
-  .tcard {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-  }
-
-  .tcard-stars { color: var(--accent); font-size: 0.85rem; letter-spacing: 2px; }
-
-  .tcard-quote {
-    font-family: 'Instrument Serif', serif;
-    font-size: 1.05rem;
-    font-style: italic;
-    color: #c8c8d0;
-    line-height: 1.7;
-    flex: 1;
-  }
-
-  .tcard-author { display: flex; align-items: center; gap: 0.8rem; }
-
-  .tcard-avatar {
-    width: 42px; height: 42px;
-    border-radius: 50%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem;
-  }
-
-  .tcard-name { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; }
-  .tcard-biz { font-size: 0.75rem; color: var(--muted); }
-
-  /* CTA */
-  .cta-wrap {
-    margin: 0 3rem 6rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 5rem 4rem;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 3rem;
-  }
-
-  .cta-glow {
-    position: absolute;
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(127,255,110,0.08) 0%, transparent 65%);
-    top: 50%; right: -100px;
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-
-  .cta-left { position: relative; z-index: 1; }
-
-  .cta-eyebrow {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1.2rem;
-  }
-
-  .cta-title {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(2rem, 3.5vw, 3.2rem);
-    font-weight: 400;
-    letter-spacing: -1px;
-    line-height: 1.1;
-    max-width: 500px;
-  }
-
-  .cta-title em { font-style: italic; color: var(--accent); }
-
-  .cta-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 1rem;
-    position: relative; z-index: 1;
-    flex-shrink: 0;
-  }
-
-  .cta-note { font-size: 0.78rem; color: var(--muted); }
-
-  /* FOOTER */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 2rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--muted);
-    font-size: 0.82rem;
-  }
-
-  .footer-logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 1.1rem;
-    color: var(--white);
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-
-  /* ANIMATIONS */
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(28px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .reveal.in { opacity: 1; transform: translateY(0); }
-
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    nav { padding: 1rem 1.5rem; }
-    nav ul { display: none; }
-    .hero { grid-template-columns: 1fr; padding: 8rem 1.5rem 4rem; }
-    .hero-right { display: none; }
-    .section { padding: 5rem 1.5rem; }
-    .section-header { flex-direction: column; align-items: flex-start; }
-    .section-note { text-align: left; max-width: 100%; }
-    .service-row { grid-template-columns: 2.5rem 1fr; }
-    .service-row-desc, .service-tag { display: none; }
-    .portfolio-grid, .testimonials-wrap { grid-template-columns: 1fr; }
-    .process-grid { grid-template-columns: 1fr 1fr; }
-    .cta-wrap { margin: 0 1.5rem 4rem; flex-direction: column; padding: 3rem 2rem; }
-    .cta-right { align-items: flex-start; }
-    footer { flex-direction: column; gap: 1rem; }
-    body { cursor: auto; }
-    .cursor, .cursor-follower { display: none; }
-  }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg: #06000f;
+  --bg2: #0d0020;
+  --surface: #110028;
+  --purple: #9b5de5;
+  --purple2: #c77dff;
+  --purple3: #e0aaff;
+  --gold: #f4d03f;
+  --white: #f0ede8;
+  --gray: #6b5f80;
+  --border: rgba(155,93,229,0.12);
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CURSOR */
+.cursor { position: fixed; width: 10px; height: 10px; background: var(--purple2); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); mix-blend-mode: screen; transition: width 0.3s, height 0.3s; }
+.cursor-ring { position: fixed; width: 38px; height: 38px; border: 1px solid rgba(155,93,229,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: left 0.1s ease, top 0.1s ease; }
+
+/* 3D CANVAS */
+#bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.5rem 4rem;
+  background: rgba(6,0,15,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 3px; color: var(--white); }
+.logo span { color: var(--purple2); }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+.nav-links a { color: var(--gray); text-decoration: none; font-size: 0.82rem; font-weight: 500; letter-spacing: 1px; transition: color 0.3s; }
+.nav-links a:hover { color: var(--white); }
+.nav-cta { background: var(--purple) !important; color: var(--white) !important; padding: 0.6rem 1.4rem; border-radius: 100px; font-weight: 600 !important; transition: box-shadow 0.3s !important; }
+.nav-cta:hover { box-shadow: 0 0 30px rgba(155,93,229,0.5) !important; }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center; gap: 4rem;
+  padding: 8rem 4rem 5rem;
+  position: relative; z-index: 1; overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute; width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(155,93,229,0.15) 0%, transparent 70%);
+  top: 50%; right: 0; transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.hero-left { position: relative; z-index: 1; }
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--purple2); margin-bottom: 2rem;
+  opacity: 0; animation: fadeIn 1s ease 0.3s forwards;
+}
+.hero-tag::before { content: ''; width: 24px; height: 1px; background: var(--purple2); }
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 8vw, 9rem);
+  line-height: 0.92; letter-spacing: -1px;
+  opacity: 0; animation: slideUp 1s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
+}
+.hero-title .solid { color: var(--white); display: block; }
+.hero-title .outline { color: transparent; -webkit-text-stroke: 1px var(--purple2); display: block; }
+.hero-title .accent { color: var(--gold); display: block; }
+
+.hero-sub {
+  margin-top: 2rem; color: var(--gray); font-size: 1rem; line-height: 1.8;
+  max-width: 420px; font-weight: 300;
+  opacity: 0; animation: fadeIn 1s ease 0.6s forwards;
+}
+
+.hero-actions {
+  display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap;
+  opacity: 0; animation: fadeIn 1s ease 0.8s forwards;
+}
+
+.btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; border-radius: 100px; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; }
+.btn-primary { background: var(--purple); color: var(--white); box-shadow: 0 0 40px rgba(155,93,229,0.3); }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 80px rgba(155,93,229,0.5); }
+.btn-outline { border: 1px solid var(--border); color: var(--gray); }
+.btn-outline:hover { border-color: var(--purple2); color: var(--purple2); }
+
+.hero-stats {
+  display: flex; gap: 2.5rem; margin-top: 3rem; padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+  opacity: 0; animation: fadeIn 1s ease 1s forwards;
+}
+.stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--purple2); line-height: 1; }
+.stat-label { font-size: 0.72rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.2rem; }
+
+/* HERO RIGHT */
+.hero-right {
+  position: relative; z-index: 1;
+  opacity: 0; animation: fadeIn 1s ease 0.7s forwards;
+}
+
+.hero-img-main {
+  border-radius: 24px; overflow: hidden;
+  border: 1px solid var(--border);
+  height: 480px; position: relative;
+  box-shadow: 0 30px 80px rgba(155,93,229,0.2);
+}
+.hero-img-main img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.7) brightness(0.8); }
+.hero-img-main::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(transparent 40%, rgba(6,0,15,0.8));
+}
+
+.hero-float-card {
+  position: absolute; bottom: -20px; left: -30px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 1.2rem 1.5rem;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  animation: float1 6s ease-in-out infinite;
+}
+.float-val { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--purple2); line-height: 1; }
+.float-label { font-size: 0.7rem; color: var(--gray); margin-top: 0.2rem; text-transform: uppercase; letter-spacing: 1px; }
+
+.hero-float-badge {
+  position: absolute; top: 20px; right: -20px;
+  background: var(--purple); border-radius: 12px;
+  padding: 0.8rem 1.2rem; font-size: 0.8rem; font-weight: 600;
+  box-shadow: 0 10px 30px rgba(155,93,229,0.4);
+  animation: float2 5s ease-in-out 1s infinite;
+}
+
+@keyframes float1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+@keyframes float2 { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-8px) rotate(-3deg)} }
+
+/* MARQUEE */
+.marquee-section {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: 1rem 0; overflow: hidden; background: rgba(155,93,229,0.03);
+}
+.marquee-track { display: flex; gap: 3rem; width: max-content; animation: marquee 18s linear infinite; }
+.marquee-item { display: flex; align-items: center; gap: 1rem; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 3px; color: var(--gray); white-space: nowrap; }
+.marquee-dot { color: var(--purple2); }
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* SECTION COMMONS */
+.section { padding: 7rem 4rem; position: relative; z-index: 1; }
+.section-eyebrow { font-size: 0.68rem; letter-spacing: 4px; text-transform: uppercase; color: var(--purple2); margin-bottom: 1rem; font-weight: 600; }
+h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 5vw, 5rem); line-height: 0.95; letter-spacing: -1px; }
+h2 em { font-style: italic; color: var(--purple2); font-family: 'Playfair Display', serif; font-size: 0.85em; }
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; gap: 2rem; }
+.section-note { color: var(--gray); font-size: 0.88rem; max-width: 260px; text-align: right; line-height: 1.7; }
+
+/* WORKS */
+.works-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+.work-card {
+  border-radius: 20px; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--border);
+  transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s;
+}
+.work-card:hover { transform: translateY(-8px); box-shadow: 0 30px 80px rgba(155,93,229,0.2); }
+.work-card.featured { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; }
+
+.work-img { height: 260px; overflow: hidden; position: relative; }
+.work-card.featured .work-img { height: auto; }
+.work-img img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.6) brightness(0.7); transition: transform 0.5s, filter 0.5s; }
+.work-card:hover .work-img img { transform: scale(1.05); filter: saturate(0.8) brightness(0.85); }
+.work-img-overlay { position: absolute; inset: 0; background: linear-gradient(transparent 50%, rgba(6,0,15,0.9)); }
+
+.work-body { padding: 2rem; }
+.work-card.featured .work-body { display: flex; flex-direction: column; justify-content: center; padding: 3rem; }
+.work-category { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--purple2); margin-bottom: 0.8rem; }
+.work-name { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.5px; margin-bottom: 0.8rem; }
+.work-card.featured .work-name { font-size: 3rem; }
+.work-desc { color: var(--gray); font-size: 0.85rem; line-height: 1.7; }
+.work-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--purple2); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 1.5rem; text-decoration: none; transition: gap 0.2s; }
+.work-link:hover { gap: 0.8rem; }
+
+/* SERVICES */
+.services-bg { background: var(--bg2); }
+.service-list { display: flex; flex-direction: column; }
+.service-row {
+  display: grid; grid-template-columns: 4rem 1fr 1fr auto;
+  align-items: center; gap: 2rem; padding: 2rem 0;
+  border-bottom: 1px solid var(--border); transition: all 0.3s; cursor: default;
+}
+.service-row:first-child { border-top: 1px solid var(--border); }
+.service-row:hover { padding-left: 1rem; }
+.service-row:hover .service-row-num { color: var(--purple2); }
+.service-row-num { font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; color: var(--gray); letter-spacing: 2px; transition: color 0.3s; }
+.service-row-name { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.5rem, 3vw, 2.8rem); letter-spacing: 0.5px; }
+.service-row-desc { color: var(--gray); font-size: 0.82rem; line-height: 1.6; }
+.service-row-tag { background: rgba(155,93,229,0.1); border: 1px solid rgba(155,93,229,0.2); color: var(--purple2); padding: 0.3rem 0.8rem; border-radius: 100px; font-size: 0.68rem; letter-spacing: 1px; white-space: nowrap; }
+
+/* GALLERY */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 220px 220px;
+  gap: 1rem; margin-top: 4rem;
+}
+.gallery-item { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); position: relative; }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.5) brightness(0.7); transition: all 0.4s; }
+.gallery-item:hover img { filter: saturate(0.8) brightness(0.9); transform: scale(1.04); }
+.gallery-item.tall { grid-row: span 2; }
+.gallery-tag { position: absolute; bottom: 1rem; left: 1rem; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.6); background: rgba(6,0,15,0.6); padding: 0.3rem 0.6rem; border-radius: 4px; }
+.gallery-overlay { position: absolute; inset: 0; background: linear-gradient(transparent 60%, rgba(6,0,15,0.7)); }
+
+/* STATS */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+.stat-box { background: var(--bg); padding: 3rem 2rem; text-align: center; transition: background 0.3s; }
+.stat-box:hover { background: var(--surface); }
+.stat-big { font-family: 'Bebas Neue', sans-serif; font-size: 5rem; line-height: 1; color: var(--purple2); }
+.stat-lbl { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); margin-top: 0.5rem; }
+
+/* PROCESS */
+.process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-top: 4rem; }
+.process-step { background: var(--bg2); padding: 2.5rem 2rem; transition: background 0.3s; }
+.process-step:hover { background: var(--surface); }
+.process-step-num { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; color: rgba(155,93,229,0.15); line-height: 1; margin-bottom: 1.5rem; }
+.process-step-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.6rem; }
+.process-step-desc { color: var(--gray); font-size: 0.83rem; line-height: 1.7; }
+
+/* TESTIMONIALS */
+.tgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 4rem; }
+.tcard { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; display: flex; flex-direction: column; gap: 1.2rem; }
+.tcard-stars { color: var(--gold); font-size: 0.85rem; letter-spacing: 2px; }
+.tcard-quote { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1rem; color: #c8c0d8; line-height: 1.7; flex: 1; }
+.tcard-author { display: flex; align-items: center; gap: 0.8rem; }
+.tcard-avatar { width: 42px; height: 42px; border-radius: 50%; background: rgba(155,93,229,0.15); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+.tcard-name { font-weight: 600; font-size: 0.85rem; }
+.tcard-biz { font-size: 0.75rem; color: var(--gray); }
+
+/* CTA */
+.cta-wrap {
+  margin: 0 4rem 6rem;
+  background: linear-gradient(135deg, var(--surface) 0%, #1a0040 100%);
+  border: 1px solid var(--border);
+  border-radius: 24px; padding: 6rem 4rem;
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 3rem; position: relative; overflow: hidden; z-index: 1;
+}
+.cta-glow { position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(155,93,229,0.12) 0%, transparent 70%); right: -100px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+.cta-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 5vw, 5rem); line-height: 0.95; letter-spacing: -1px; max-width: 550px; }
+.cta-title span { color: var(--purple2); }
+.cta-sub { color: var(--gray); font-size: 0.95rem; margin-top: 1.2rem; line-height: 1.7; max-width: 450px; }
+.cta-right { display: flex; flex-direction: column; gap: 1rem; align-items: flex-end; flex-shrink: 0; }
+.cta-note { font-size: 0.75rem; color: var(--gray); }
+
+/* FOOTER */
+footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+.footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 3px; color: var(--white); }
+.footer-logo span { color: var(--purple2); }
+footer p { color: var(--gray); font-size: 0.82rem; }
+.footer-link { color: var(--purple2); text-decoration: none; font-size: 0.82rem; }
+
+/* ANIMATIONS */
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes slideUp { from{opacity:0;transform:translateY(50px)} to{opacity:1;transform:translateY(0)} }
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 4rem; gap: 3rem; }
+  .section { padding: 5rem 1.5rem; }
+  .section-header { flex-direction: column; align-items: flex-start; }
+  .section-note { text-align: left; max-width: 100%; }
+  .works-grid { grid-template-columns: 1fr; }
+  .work-card.featured { grid-column: span 1; display: block; }
+  .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+  .gallery-item.tall { grid-row: span 1; }
+  .service-row { grid-template-columns: 3rem 1fr; }
+  .service-row-desc, .service-row-tag { display: none; }
+  .stats-grid, .process-grid { grid-template-columns: 1fr 1fr; }
+  .tgrid { grid-template-columns: 1fr; }
+  .cta-wrap { margin: 0 1.5rem 4rem; flex-direction: column; padding: 3rem 2rem; }
+  .cta-right { align-items: flex-start; }
+  footer { flex-direction: column; gap: 1rem; text-align: center; }
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+}
 </style>
 </head>
 <body>
 
 <div class="cursor" id="cursor"></div>
-<div class="cursor-follower" id="cursorFollower"></div>
+<div class="cursor-ring" id="ring"></div>
+<canvas id="bg-canvas"></canvas>
 
 <!-- NAV -->
 <nav>
-  <div class="logo">
-    <div class="logo-dot"></div>
-    WebCanvas
-  </div>
+  <div class="logo">Web<span>Canvas</span></div>
   <ul class="nav-links">
+    <li><a href="#works">Work</a></li>
     <li><a href="#services">Services</a></li>
-    <li><a href="#work">Work</a></li>
     <li><a href="#process">Process</a></li>
-    <li><a href="#contact" class="nav-btn">Let's Talk</a></li>
+    <li><a href="#contact" class="nav-cta">Get Free Mockup</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-grid-lines"></div>
   <div class="hero-glow"></div>
-
   <div class="hero-left">
-    <div class="hero-eyebrow">Open for projects — Bengaluru & pan-India</div>
-    <h1>Your business,<br><em>beautifully</em><br>on the web.</h1>
-    <p class="hero-body">WebCanvas creates fast, stunning websites for Indian businesses — restaurants, salons, clinics, gyms, and more. We make you look incredible online.</p>
+    <div class="hero-tag">Digital Studio — Bengaluru, India</div>
+    <div class="hero-title">
+      <span class="solid">WE BUILD</span>
+      <span class="outline">WEBSITES</span>
+      <span class="accent">THAT WORK.</span>
+    </div>
+    <p class="hero-sub">WebCanvas creates fast, stunning websites for Indian businesses — restaurants, clinics, salons, gyms and more. We make you look incredible online.</p>
     <div class="hero-actions">
-      <a href="https://wa.me/918088369453?text=Hi%2C%20I%20want%20a%20website%20for%20my%20business" target="_blank" class="btn btn-fill">Get a Free Mockup →</a>
-      <a href="#work" class="btn btn-ghost">See Our Work</a>
+      <a href="https://wa.me/918088369453?text=Hi%2C%20I%20want%20a%20website%20for%20my%20business" target="_blank" class="btn btn-primary">💬 Get Free Mockup</a>
+      <a href="#works" class="btn btn-outline">See Our Work</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-val">20+</div><div class="stat-label">Websites Built</div></div>
+      <div><div class="stat-val">48H</div><div class="stat-label">Fast Delivery</div></div>
+      <div><div class="stat-val">₹0</div><div class="stat-label">Free Mockup</div></div>
     </div>
   </div>
 
   <div class="hero-right">
-    <div class="float-card float-card-main">
-      <div class="card-label">Latest Project</div>
-      <div class="card-preview">🍽️</div>
-      <div class="card-title">Spice Garden Restaurant</div>
-      <div class="card-sub">Online menu + table booking</div>
+    <div class="hero-img-main">
+      <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800&q=80" alt="WebCanvas web design studio Bengaluru"/>
     </div>
-    <div class="float-card float-card-stat">
-      <div class="stat-num-big">48h</div>
-      <div class="stat-desc">Average delivery time</div>
+    <div class="hero-float-card">
+      <div class="float-val">100%</div>
+      <div class="float-label">Client Satisfaction</div>
     </div>
-    <div class="float-card float-card-badge">
-      <div class="badge-icon">⚡</div>
-      <div class="badge-text">Mobile-First</div>
-      <div class="badge-sub">All sites work perfectly on phones</div>
-    </div>
+    <div class="hero-float-badge">⚡ Delivered in 48 Hours</div>
   </div>
 </section>
 
 <!-- MARQUEE -->
 <div class="marquee-section">
-  <div class="marquee-wrap">
-    <div class="marquee-track">
-      <div class="marquee-item"><span class="marquee-dot">✦</span> Restaurant Websites</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> Salon & Spa</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> Clinics & Healthcare</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> Gyms & Fitness</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> Coaching Institutes</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> E-commerce Stores</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> Local Businesses</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> SEO Optimization</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> Restaurant Websites</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> Salon & Spa</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> Clinics & Healthcare</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> Gyms & Fitness</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> Coaching Institutes</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> E-commerce Stores</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> Local Businesses</div>
-      <div class="marquee-item"><span class="marquee-dot">✦</span> SEO Optimization</div>
-    </div>
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="marquee-dot">✦</span> Restaurant Websites</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> Dental Clinics</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> Salons & Spas</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> Gyms & Fitness</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> E-Commerce Stores</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> Coaching Institutes</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> SEO Optimization</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> Local Businesses</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> Restaurant Websites</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> Dental Clinics</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> Salons & Spas</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> Gyms & Fitness</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> E-Commerce Stores</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> Coaching Institutes</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> SEO Optimization</div>
+    <div class="marquee-item"><span class="marquee-dot">✦</span> Local Businesses</div>
   </div>
 </div>
 
-<!-- SERVICES -->
-<section class="section" id="services">
+<!-- WORKS -->
+<section class="section" id="works">
   <div class="section-header reveal">
     <div>
-      <div class="section-eyebrow">What We Build</div>
-      <h2>Everything your<br>business needs <em>online.</em></h2>
-    </div>
-    <p class="section-note">We tailor every project to your business goals — no cookie-cutter templates.</p>
-  </div>
-
-  <div class="service-list reveal">
-    <div class="service-row">
-      <div class="service-num">01</div>
-      <div class="service-row-title">Business Websites</div>
-      <div class="service-row-desc">Clean, professional sites that make customers trust you instantly and reach out.</div>
-      <div class="service-tag">Most Popular</div>
-    </div>
-    <div class="service-row">
-      <div class="service-num">02</div>
-      <div class="service-row-title">E-Commerce Stores</div>
-      <div class="service-row-desc">Sell online with payments, inventory management, and order tracking built in.</div>
-      <div class="service-tag">High ROI</div>
-    </div>
-    <div class="service-row">
-      <div class="service-num">03</div>
-      <div class="service-row-title">SEO & Google Ranking</div>
-      <div class="service-row-desc">Get found by customers actively searching for your services on Google.</div>
-      <div class="service-tag">Long-term Growth</div>
-    </div>
-    <div class="service-row">
-      <div class="service-num">04</div>
-      <div class="service-row-title">Booking & Enquiry Systems</div>
-      <div class="service-row-desc">Let customers book appointments or send enquiries directly from your website.</div>
-      <div class="service-tag">Save Time</div>
-    </div>
-    <div class="service-row">
-      <div class="service-num">05</div>
-      <div class="service-row-title">WhatsApp & Social Integration</div>
-      <div class="service-row-desc">Connect your website to WhatsApp, Instagram, and Google Business Profile.</div>
-      <div class="service-tag">More Leads</div>
-    </div>
-    <div class="service-row">
-      <div class="service-num">06</div>
-      <div class="service-row-title">Monthly Maintenance</div>
-      <div class="service-row-desc">We keep your site fast, secure, and updated every month — you focus on your business.</div>
-      <div class="service-tag">Ongoing Support</div>
-    </div>
-  </div>
-</section>
-
-<!-- PORTFOLIO -->
-<section class="section" id="work">
-  <div class="section-header reveal">
-    <div>
-      <div class="section-eyebrow">Our Work</div>
-      <h2>Projects that made<br>businesses <em>grow.</em></h2>
+      <div class="section-eyebrow">01 — Selected Works</div>
+      <h2>OUR <em>Projects</em></h2>
     </div>
     <p class="section-note">Every project is custom-built for the client's specific audience and goals.</p>
   </div>
 
-  <div class="portfolio-grid reveal">
-    <div class="portfolio-card">
-      <div class="portfolio-thumb t1">🍽️</div>
-      <div class="portfolio-body">
-        <div class="portfolio-category">Restaurant</div>
-        <div class="portfolio-title">Spice Garden — Pune</div>
-        <div class="portfolio-desc">Full website with online menu, table booking & Google Maps</div>
+  <div class="works-grid reveal">
+    <div class="work-card featured">
+      <div class="work-img">
+        <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&q=80" alt="Dental clinic website design Bengaluru"/>
+        <div class="work-img-overlay"></div>
+      </div>
+      <div class="work-body">
+        <div class="work-category">Healthcare — Koramangala, Bangalore</div>
+        <div class="work-name">Dental Health Clinic</div>
+        <p class="work-desc">A complete dental clinic website with appointment booking via WhatsApp, services showcase, Google Maps integration and clinic timings — delivered in 48 hours.</p>
+        <a href="#contact" class="work-link">View Project →</a>
       </div>
     </div>
-    <div class="portfolio-card">
-      <div class="portfolio-thumb t2">💇</div>
-      <div class="portfolio-body">
-        <div class="portfolio-category">Salon & Spa</div>
-        <div class="portfolio-title">Glam Studio — Mumbai</div>
-        <div class="portfolio-desc">Service showcase with appointment booking & WhatsApp integration</div>
+    <div class="work-card">
+      <div class="work-img">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Restaurant website design Bengaluru"/>
+        <div class="work-img-overlay"></div>
+      </div>
+      <div class="work-body">
+        <div class="work-category">Restaurant — Pune</div>
+        <div class="work-name">Spice Garden</div>
+        <p class="work-desc">Online menu, table booking & Google Maps integration.</p>
       </div>
     </div>
-    <div class="portfolio-card">
-      <div class="portfolio-thumb t3">🏥</div>
-      <div class="portfolio-body">
-        <div class="portfolio-category">Healthcare</div>
-        <div class="portfolio-title">HealthFirst Clinic — Delhi</div>
-        <div class="portfolio-desc">Doctor profiles, appointment system & patient trust design</div>
+    <div class="work-card">
+      <div class="work-img">
+        <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&q=80" alt="Salon website design India"/>
+        <div class="work-img-overlay"></div>
+      </div>
+      <div class="work-body">
+        <div class="work-category">Salon & Spa — Mumbai</div>
+        <div class="work-name">Glam Studio</div>
+        <p class="work-desc">Appointment booking, service showcase & WhatsApp integration.</p>
       </div>
     </div>
-    <div class="portfolio-card">
-      <div class="portfolio-thumb t4">💪</div>
-      <div class="portfolio-body">
-        <div class="portfolio-category">Fitness</div>
-        <div class="portfolio-title">IronWill Gym — Bangalore</div>
-        <div class="portfolio-desc">Membership plans, class schedule & trainer profiles</div>
-      </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section services-bg" id="services">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-eyebrow">02 — What We Do</div>
+      <h2>OUR <em>Services</em></h2>
     </div>
+    <p class="section-note">Everything your business needs to look great and get more customers online.</p>
+  </div>
+
+  <div class="service-list reveal">
+    <div class="service-row">
+      <div class="service-row-num">01</div>
+      <div class="service-row-name">BUSINESS WEBSITES</div>
+      <div class="service-row-desc">Clean, professional websites that make customers trust you and reach out instantly.</div>
+      <div class="service-row-tag">Most Popular</div>
+    </div>
+    <div class="service-row">
+      <div class="service-row-num">02</div>
+      <div class="service-row-name">E-COMMERCE STORES</div>
+      <div class="service-row-desc">Sell online with payments, inventory management, and order tracking built in.</div>
+      <div class="service-row-tag">High ROI</div>
+    </div>
+    <div class="service-row">
+      <div class="service-row-num">03</div>
+      <div class="service-row-name">SEO OPTIMIZATION</div>
+      <div class="service-row-desc">Get found on Google by customers actively searching for your services.</div>
+      <div class="service-row-tag">Growth</div>
+    </div>
+    <div class="service-row">
+      <div class="service-row-num">04</div>
+      <div class="service-row-name">BOOKING SYSTEMS</div>
+      <div class="service-row-desc">Let customers book appointments directly from your website via WhatsApp.</div>
+      <div class="service-row-tag">Save Time</div>
+    </div>
+    <div class="service-row">
+      <div class="service-row-num">05</div>
+      <div class="service-row-name">MONTHLY MAINTENANCE</div>
+      <div class="service-row-desc">We keep your site fast, secure, and updated every month.</div>
+      <div class="service-row-tag">Ongoing</div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="section" id="gallery">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-eyebrow">03 — Our Work</div>
+      <h2>DESIGN <em>Gallery</em></h2>
+    </div>
+  </div>
+  <div class="gallery-grid reveal">
+    <div class="gallery-item tall">
+      <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&q=80" alt="Web design work"/>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-tag">Web Design</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=600&q=80" alt="UI Design"/>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-tag">UI Design</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&q=80" alt="Mobile Design"/>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-tag">Mobile First</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?w=600&q=80" alt="Development"/>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-tag">Development</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80" alt="Analytics"/>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-tag">SEO & Analytics</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="section services-bg">
+  <div class="stats-grid reveal">
+    <div class="stat-box"><div class="stat-big">20+</div><div class="stat-lbl">Websites Delivered</div></div>
+    <div class="stat-box"><div class="stat-big">48H</div><div class="stat-lbl">Average Delivery</div></div>
+    <div class="stat-box"><div class="stat-big">100%</div><div class="stat-lbl">Client Satisfaction</div></div>
+    <div class="stat-box"><div class="stat-big">₹0</div><div class="stat-lbl">Cost for Mockup</div></div>
   </div>
 </section>
 
 <!-- PROCESS -->
 <section class="section" id="process">
-  <div class="section-header reveal">
-    <div>
-      <div class="section-eyebrow">How It Works</div>
-      <h2>From idea to live<br>in <em>72 hours.</em></h2>
-    </div>
-    <p class="section-note">A simple, transparent process with no jargon and no surprises.</p>
+  <div class="reveal">
+    <div class="section-eyebrow">04 — How It Works</div>
+    <h2>OUR <em>Process</em></h2>
   </div>
-
   <div class="process-grid reveal">
     <div class="process-step">
-      <div class="step-index">01</div>
-      <div class="step-name">Free Consultation</div>
-      <p class="step-detail">Tell us about your business. We understand your goals, audience, and style in a quick chat.</p>
+      <div class="process-step-num">01</div>
+      <div class="process-step-title">Free Consultation</div>
+      <p class="process-step-desc">Tell us about your business. We understand your goals, audience, and style in a quick chat.</p>
     </div>
     <div class="process-step">
-      <div class="step-index">02</div>
-      <div class="step-name">Free Mockup</div>
-      <p class="step-detail">We design a homepage preview for your business — no payment, no commitment needed to see it.</p>
+      <div class="process-step-num">02</div>
+      <div class="process-step-title">Free Mockup</div>
+      <p class="process-step-desc">We design a homepage preview — no payment, no commitment. You see it before paying.</p>
     </div>
     <div class="process-step">
-      <div class="step-index">03</div>
-      <div class="step-name">Build & Review</div>
-      <p class="step-detail">Once approved, we build the full site and share it for your feedback. Unlimited revisions included.</p>
+      <div class="process-step-num">03</div>
+      <div class="process-step-title">Build & Review</div>
+      <p class="process-step-desc">We build the full site and share for your feedback. Unlimited revisions included.</p>
     </div>
     <div class="process-step">
-      <div class="step-index">04</div>
-      <div class="step-name">Go Live!</div>
-      <p class="step-detail">We launch your site, set up your domain, and hand over everything. You're open for business online.</p>
+      <div class="process-step-num">04</div>
+      <div class="process-step-title">Go Live!</div>
+      <p class="process-step-desc">We launch your site, set up domain, and hand over everything. You're online!</p>
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="section">
+<section class="section services-bg">
   <div class="section-header reveal">
     <div>
-      <div class="section-eyebrow">Kind Words</div>
-      <h2>What our clients<br><em>say about us.</em></h2>
+      <div class="section-eyebrow">05 — Kind Words</div>
+      <h2>CLIENT <em>Reviews</em></h2>
     </div>
   </div>
-
-  <div class="testimonials-wrap reveal">
+  <div class="tgrid reveal">
     <div class="tcard">
       <div class="tcard-stars">★★★★★</div>
-      <div class="tcard-quote">"We started getting online enquiries within a week of launching. WebCanvas delivered exactly what we needed — fast and affordable."</div>
+      <div class="tcard-quote">"We started getting online enquiries within a week of launching. WebCanvas delivered exactly what we needed!"</div>
       <div class="tcard-author">
         <div class="tcard-avatar">🍽️</div>
-        <div>
-          <div class="tcard-name">Rahul Sharma</div>
-          <div class="tcard-biz">Spice Garden, Pune</div>
-        </div>
+        <div><div class="tcard-name">Rahul Sharma</div><div class="tcard-biz">Spice Garden, Pune</div></div>
       </div>
     </div>
     <div class="tcard">
       <div class="tcard-stars">★★★★★</div>
-      <div class="tcard-quote">"Our salon bookings increased by 40% after the website went live. The design is gorgeous and our customers love it!"</div>
+      <div class="tcard-quote">"Our salon bookings increased by 40% after the website went live. The design is gorgeous!"</div>
       <div class="tcard-author">
         <div class="tcard-avatar">💇</div>
-        <div>
-          <div class="tcard-name">Priya Mehta</div>
-          <div class="tcard-biz">Glam Studio, Mumbai</div>
-        </div>
+        <div><div class="tcard-name">Priya Mehta</div><div class="tcard-biz">Glam Studio, Mumbai</div></div>
       </div>
     </div>
     <div class="tcard">
       <div class="tcard-stars">★★★★★</div>
-      <div class="tcard-quote">"Very professional. They understood our requirements perfectly and delivered in just 2 days. Highly recommend WebCanvas!"</div>
+      <div class="tcard-quote">"Very professional. Delivered in just 2 days and patients now find us easily on Google!"</div>
       <div class="tcard-author">
         <div class="tcard-avatar">🏥</div>
-        <div>
-          <div class="tcard-name">Dr. Ankit Verma</div>
-          <div class="tcard-biz">HealthFirst Clinic, Delhi</div>
-        </div>
+        <div><div class="tcard-name">Dr. Ankit Verma</div><div class="tcard-biz">HealthFirst Clinic, Delhi</div></div>
       </div>
     </div>
   </div>
@@ -960,46 +640,97 @@
 <!-- CTA -->
 <div class="cta-wrap reveal" id="contact">
   <div class="cta-glow"></div>
-  <div class="cta-left">
-    <div class="cta-eyebrow">Ready to grow?</div>
-    <div class="cta-title">Let's build something <em>great</em> together.</div>
+  <div>
+    <div class="cta-title">LET'S BUILD SOMETHING <span>GREAT</span> TOGETHER</div>
+    <p class="cta-sub">Ready to take your business online? Get a free mockup within 24 hours — no commitment, no payment needed.</p>
   </div>
   <div class="cta-right">
-    <a href="https://wa.me/918088369453?text=Hi%2C%20I%20want%20a%20website%20for%20my%20business" target="_blank" class="btn btn-fill">💬 Chat on WhatsApp</a>
-    <div class="cta-note">Free mockup · No commitment · Reply within 2 hours</div>
+    <a href="https://wa.me/918088369453?text=Hi%2C%20I%20want%20a%20website%20for%20my%20business" target="_blank" class="btn btn-primary">💬 WhatsApp Us</a>
+    <a href="tel:+918088369453" class="btn btn-outline">📞 Call Now</a>
+    <div class="cta-note">Free mockup · No commitment · Reply in 2 hours</div>
   </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">
-    <div class="logo-dot"></div>
-    WebCanvas
-  </div>
-  <div>© 2026 WebCanvas. All rights reserved.</div>
-  <div>Made with ❤️ in India</div>
+  <div class="footer-logo">Web<span>Canvas</span></div>
+  <p>© 2026 WebCanvas. Made with ❤️ in Bengaluru, India</p>
+  <a href="https://wa.me/918088369453" class="footer-link">+91 80883 69453</a>
 </footer>
 
 <script>
-  // Cursor
-  const cursor = document.getElementById('cursor');
-  const follower = document.getElementById('cursorFollower');
-  let mx = 0, my = 0;
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('ring');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px';
+  ring.style.top = e.clientY + 'px';
+});
 
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
-    follower.style.left = mx + 'px';
-    follower.style.top = my + 'px';
+// 3D CANVAS — Purple particle network
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+const particles = [];
+for (let i = 0; i < 70; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.25,
+    vy: (Math.random() - 0.5) * 0.25,
+    r: Math.random() * 1.5 + 0.5,
+    alpha: Math.random() * 0.3 + 0.1
   });
+}
 
-  // Scroll reveal
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-  }, { threshold: 0.1 });
+let mx = canvas.width / 2, my = canvas.height / 2;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 130) {
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(155,93,229,${0.08 * (1 - d/130)})`;
+        ctx.lineWidth = 0.5;
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+  particles.forEach(p => {
+    const dx = mx - p.x, dy = my - p.y;
+    const d = Math.sqrt(dx*dx + dy*dy);
+    if (d < 200) { p.x -= dx * 0.008; p.y -= dy * 0.008; }
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = canvas.width;
+    if (p.x > canvas.width) p.x = 0;
+    if (p.y < 0) p.y = canvas.height;
+    if (p.y > canvas.height) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(155,93,229,${p.alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+// SCROLL REVEAL
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
